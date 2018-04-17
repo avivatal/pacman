@@ -3,20 +3,74 @@
     
     <head>
             <link rel="stylesheet" type="text/css" href="design.css">
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+            <script type="text/javascript" src="javascript.js"></script>
+            
     </head>
     
     <body>
-        <header><img src="logo.gif"></header>
-        <canvas id="canvas" height="600" width="600"></canvas>
-        <script type="text/javascript" src="javascript.js"></script>
-        <p class=txt>Score:</p>
-        <input id="lblScore" class=box type="text" />
-        <br/>
-        <p class=txt>Time:</p>
-        <input id="lblTime" class=box type="text" />
-        <br/>
+            
+        <header>
+                
+            <img class=logo src="logo.gif">
+            
+        </header>
+        
+                
+       
+        <div id="welcome" style="align-items: center">
+                
+                <button onclick="displaySignUp()">Sign Up</button>
+                <button onclick="displaySignIn()">Sign in</button>
 
+        </div>
+       
+    <div id="signup">
+        <form id="signupform" style="color:yellow; font-family: Arial, Helvetica, sans-serif;">
+            Username:</br>
+            <input id="username" type="text" ></br></br>
+            Password:</br>
+            <input id="password" type="password" ></br></br>
+            First Name:</br>
+            <input id="firstname" type="text" ></br></br>
+            Last Name:</br>
+            <input id="lastname" type="text" ></br></br>
+            Email:</br>
+            <input id="email" type="text" ></br></br>
+            Date of Birth:</br>
+            <input id="dob" type="date" ></br></br>
            
+        </form>
+        <button id="submit" onclick="signup()">Submit</button>
+    </div>
+
+    <div id="signin">
+            <form id="signinform" style="color:yellow; font-family: Arial, Helvetica, sans-serif;">
+                    Username:</br>
+                    <input id="usernameSignIn" type="text" ></br></br>
+                    Password:</br>
+                    <input id="passwordSignIn" type="password" ></br></br>
+                   
+            </form>
+            <button onclick="signinfunc()">Submit</button>
+    </div>
+
+    <div id="game">
+            <canvas id="canvas" height="600" width="600"></canvas>
+            
+            
+            <p class=txt>Score:</p>
+            <input id="lblScore" class="box" type="text" />
+            <br/>
+            <p class=txt>Time:</p>
+            <input id="lblTime" class="box" type="text" />
+            <br/>
+            <p class=txt>Lives:</p>
+            <label id="lblLives" class="txt" type="text" >test</label>
+            <br/>
+    </div>
+        
+    
         
     </body>
 
