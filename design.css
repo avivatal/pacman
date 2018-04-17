@@ -1,0 +1,37 @@
+canvas {
+    padding-top: 200px;
+    margin: auto;
+    display: block;
+    width: 600px;
+    height: 600px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+html{
+    background-color: black;
+}
+header{
+    padding: 0;
+    margin: auto;
+    width: 250px;
+    height:250px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.txt{
+	color: yellow;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	padding-left: 100px;
+}
+
+.box{
+	margin-left: 100px;
+}
