@@ -1,13 +1,12 @@
 canvas {
-    padding-top: 200px;
     margin: auto;
     display: block;
-    width: 600px;
-    height: 600px;
+    width: 500px;
+    height: 500px;
     position: absolute;
-    top: 0;
+	top: 0;
     bottom: 0;
-    left: 0;
+    left: 300px;
     right: 0;
 }
 
@@ -16,7 +15,6 @@ html{
 }
 header{
     padding: 0;
-    margin: auto;
     width: 250px;
     height:250px;
     top: 0;
@@ -25,6 +23,24 @@ header{
     right: 0;
     
 }
+
+.logo{
+	margin-left: 530px;
+}
+
+.logoc {
+    width: 300px;
+    height: 220px;
+	margin-top:30px;
+	margin-left: 20px;
+}
+
+/* resize images */
+.logoc img {
+    width: 100%;
+    height: auto;
+}
+
 
 
 .txt{
@@ -36,4 +52,141 @@ header{
 
 .box{
 	margin-left: 100px;
+}
+
+
+
+welcome{
+	padding-top: 400px;
+	margin-left: 100px;
+    height: 600px;
+    top: 200px;
+    bottom: 0;
+    left: 1000px;
+    right: 0;
+	
+}
+
+div{
+	position: absolute;
+	margin-left: 200px;} 
+
+signup{	
+	padding-top: 400px;
+    height: 600px;
+    top: 200px;
+    bottom: 0;
+    right: 0;
+}
+.container {
+	position: relative;
+    border-radius: 5px;
+    background-color: rgba(0,0,153,0.6);
+    padding: 50px;
+	width: 50%;
+}
+
+nav{
+	background-color: "yellow";
+	overflow: hidden;
+    top: 0; /* Position the navbar at the top of the page */
+    width: 100%; /* Full width */
+	font-family:'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+	font-size: 20px;
+
+}
+
+
+@font-face {
+    font-family: 'socialfont';
+    src: url('http://mediaashley.com/MyFont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+button {
+	width:100px;
+  height:50px;
+  display:inline-block;
+  font-family:Arial, "Helvetica", sans-serif;
+  font-size:16px;
+  font-weight:bold;
+  color:#fff;
+  text-decoration:none;
+  text-transform:uppercase;
+  text-align:center;
+  text-shadow:1px 1px 0px #07526e;
+  padding-top:6px;
+  margin-left:50px;
+  margin-right:50px;
+  left:30px;
+  position:relative;
+  cursor:pointer;
+  border: none;
+  background: #00ccff;
+  background-image: linear-gradient(bottom, rgb(14,137,182) 0%, rgb(22,179,236) 100%);
+  border-radius: 5px;
+  box-shadow: inset 0px 1px 0px #2ab7ec, 0px 5px 0px 0px #07526e, 0px 10px 5px #999;
+}
+
+button:active {
+  top:3px;
+  box-shadow: inset 0px 1px 0px #2ab7ec, 0px 2px 0px 0px #07526e, 0px 5px 3px #999;
+}
+
+button:before {
+  font-family: 'socialfont';
+  font-size: 50px;
+  line-height: 1em;
+  font-weight: normal;
+  color: #fff;
+  width:85px;
+  height:90px;
+  display:block;
+  position:absolute;
+  padding-top:10px;
+  top:10px;
+  text-shadow: 1px 1px 2px #07526e;
+
+}
+
+button:active:before {
+  top: 7px;
+  font-size: 50px;
+  text-shadow: 0px 3px 0px #07526e, 0px 5px 1px #07526e/*, 3px 0px 1px #07526e, 3px 3px 1px #07526e,
+     -2px 0px 1px #68cff2*/;
+}
+
+ul {
+	position: relative;
+	font-family:Arial, "Helvetica", sans-serif;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    margin-left: 50px;
+	background-color: "yellow";
+}
+
+.nav{
+	background-color: #00ffcc;
+	font-family:Arial, "Helvetica", sans-serif;
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+	margin-top: 5px;
+	border-radius: 10px;
+}
+
+/* Change the link color on hover */
+.nav a:hover {
+    background-color: #555;
+    color: white;
+}
+
+.nav a.active {
+    background-color: #4CAF50;
+    color: white;
 }

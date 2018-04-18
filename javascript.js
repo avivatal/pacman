@@ -15,10 +15,13 @@ var pinkfood = false;
 var bluefood = false;
 var greenfood = false;
 var heartfood = false;
+var candyfood = false;
 var ghostfood = [pinkfood, bluefood, greenfood];
 var lastKeyPressed = null;
 var heartPosition = [9, 0];
+var candyPosition = [5,5];
 var isHeartAlive = true;
+var isCandyAlive = true;
 var lives = 3;
 var isGameOver = true;
 var users;
@@ -29,6 +32,10 @@ var signupDiv;
 var signinDiv;
 var welcomeDiv;
 var gameDiv;
+var mySound;
+var readyDiv;
+var gameOverDiv;
+var numOfFood = 50;
 
 $(document).ready(function () {
     signupDiv = document.getElementById("signup")
@@ -38,9 +45,18 @@ $(document).ready(function () {
     gameDiv = document.getElementById("game")
     gameDiv.style.visibility = 'hidden';
     welcomeDiv = document.getElementById("welcome");
+	readyDiv = document.getElementById("ready");
+	readyDiv.style.visibility = 'hidden';
+	gameOverDiv = document.getElementById("gameOver");
+	gameOverDiv.style.visibility = 'hidden';
     users = new Array();
     users.push(["a", "a"]);
-    
+    window.addEventListener("keydown", function(e) {
+    // space and arrow keys
+    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+    }
+}, false);
 });
 
 function start() {
@@ -54,8 +70,8 @@ function start() {
     var pacman_remain = 1;
     start_time = new Date();
     document.getElementById('lblLives').innerHTML = lives;
-    mySound = new sound("sound.mp3");
-    mySound.play();
+    eatingSound = new sound("eatingSound.mp3");
+	eatingSound.loop();
 
     for (var i = 0; i < 10; i++) {
         board[i] = new Array();
@@ -70,10 +86,12 @@ function start() {
                     food_remain--;
                     board[i][j] = 1;
                 } else if (randomNum < 1.0 * (pacman_remain + food_remain) / cnt) {
-                    shape.i = i;
-                    shape.j = j;
-                    pacman_remain--;
-                    board[i][j] = 2;
+					if((i!=9 && (j!=0 || j!=9)) || (i!=0 && (j!=0 || j!=9)) && (i!=5 && j!=5)){ 
+						shape.i = i;
+						shape.j = j;
+						pacman_remain--;
+						board[i][j] = 2;
+					}
                 } else {
                     board[i][j] = 0;
                 }
@@ -81,6 +99,7 @@ function start() {
             }
         }
     }
+	board[5][5] = 9; //candy
     board[9][0] = 8 //heart
     board[0][0] = 5; //pink
     board[9][9] = 6; //blue
@@ -90,8 +109,18 @@ function start() {
         board[emptyCell[0]][emptyCell[1]] = 1;
         food_remain--;
     }
-    keysDown = {};
-    addEventListener("keydown", function (e) {
+   
+    //interval=setInterval(UpdatePosition, 250);
+	
+    
+	Draw();
+	readySetGo();
+	mySound = new sound("opening.mp3");
+    mySound.play();
+	keysDown = {};
+	setTimeout(function () {
+         readyDiv.style.visibility = 'hidden';
+		addEventListener("keydown", function (e) {
         keysDown[e.keyCode] = true;
 
         UpdatePosition();
@@ -100,11 +129,18 @@ function start() {
         keysDown[e.keyCode] = false;
 
     }, false);
-    //interval=setInterval(UpdatePosition, 250);
-    setInterval(UpdateTimer, 250);
+	setInterval(UpdateTimer, 250);
     setInterval(moveGhosts, 450);
     setInterval(moveHeart, 550);
+	setInterval(moveCandy, 550);
+    }, 5000);
+	
 }
+
+function readySetGo(){
+	readyDiv.style.visibility = 'visible';
+}
+	
 
 function findRandomEmptyCell(board) {
     var i = Math.floor((Math.random() * 9) + 1);
@@ -239,6 +275,15 @@ function Draw() {
                         context.drawImage(heart, x, y, 60, 60);
                     }
                 }
+				else if (isCandyAlive && board[i][j] == 9) {
+                    var candy = new Image();
+                    candy.src = "candy.png";
+                    candy.onload = function () {
+                        var x = candyPosition[0] * 60;
+                        var y = candyPosition[1] * 60;
+                        context.drawImage(candy, x, y, 60, 60);
+                    }
+                }
             }
         }
 
@@ -327,6 +372,9 @@ function UpdatePosition() {
         }
         if (board[shape.i][shape.j] == 1) {
             score++;
+			numOfFood--;
+			eatingSound.play();
+			
         }
         board[shape.i][shape.j] = 2;
         //  var currentTime=new Date();
@@ -334,13 +382,14 @@ function UpdatePosition() {
         if (score >= 20 && time_elapsed <= 10) {
             pac_color = "green";
         }
-        if (score == 50) {
+        if (numOfFood == 0) {
             window.clearInterval(interval);
             window.alert("Game completed");
-            sound.pause();
+            mySound.pause();
         }
         else {
             didEatHeart();
+			didEatCandy();
             didGhostEatPacman();
             if (!isGameOver) {
                 Draw();
@@ -379,6 +428,36 @@ function moveHeart() {
 
 }
 
+function moveCandy() {
+    if (!isGameOver && isCandyAlive) {
+        var x = candyPosition[0];
+        var y = candyPosition[1];
+        var positions = [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]];
+        var random = Math.floor(Math.random() * (3 - 0 + 1)) + 0;
+        var newPos = positions[random];
+        var isGoodPosition = false;
+        while (!isGoodPosition) {
+            if (newPos[0] < board.length && newPos[1] < board.length && newPos[0] >= 0 && newPos[1] >= 0 &&
+                board[newPos[0]][newPos[1]] < 4 && board[newPos[0]][newPos[1]] != 2) {
+                isGoodPosition = true;
+            }
+            else {
+                random = Math.floor(Math.random() * (3 - 0 + 1)) + 0;
+                newPos = positions[random];
+            }
+        }
+        if (candyfood) {
+            board[candyPosition[0]][candyPosition[1]] = 1;
+        }
+        candyPosition = [newPos[0], newPos[1]];
+        if (board[newPos[0]][newPos[1]] == 1) {
+            candyfood = true;
+        }
+        board[newPos[0]][newPos[1]] = 9;
+    }
+
+}
+
 function UpdateTimer() {
     if (!isGameOver) {
         var currentTime = new Date();
@@ -397,7 +476,13 @@ function sound(src) {
     this.play = function () {
         this.sound.play();
     }
-    this.stop = function () {
+	this.loop = function() {
+		this.sound.addEventListener('ended', function() {
+		this.sound.currentTime = 0;
+		this.sound.play();
+		}, false);
+	}
+    this.pause = function () {
         this.sound.pause();
     }
 }
@@ -405,9 +490,20 @@ function sound(src) {
 function didEatHeart() {
     if (!isGameOver) {
         if (isHeartAlive && shape.i == heartPosition[0] && shape.j == heartPosition[1]) {
+            lives++;
+            document.getElementById('lblLives').innerHTML = lives;
+            isHeartAlive = false;
+            board[shape.i][shape.j] = 2;
+        }
+    }
+}
+
+function didEatCandy() {
+    if (!isGameOver) {
+        if (isCandyAlive && shape.i == candyPosition[0] && shape.j == candyPosition[1]) {
             score = score + 50;
             lblScore.value = score;
-            isHeartAlive = false;
+            isCandyAlive = false;
             board[shape.i][shape.j] = 2;
         }
     }
@@ -424,9 +520,12 @@ function didGhostEatPacman() {
                     restartGame();
                 }
                 else {
-                    window.alert("Game Over :(");
-                    sound.stop;
+                    
+                    mySound.pause();
                     isGameOver = true;
+					overSound = new sound("gameOver.mp3");
+					overSound.play();
+					gameOverDiv.style.visibility = 'visible';
                 }
                 break;
             }
@@ -519,11 +618,19 @@ function signinfunc(){
 
 function displaySignUp() {
    welcomeDiv.style.visibility = 'hidden';
+    signinDiv.style.visibility = 'hidden';
+    gameDiv.style.visibility = 'hidden';
+	readyDiv.style.visibility = 'hidden';
+	gameOverDiv.style.visibility = 'hidden';
     signupDiv.style.visibility = 'visible';
 }
 
 function displaySignIn() {
-    welcomeDiv.style.visibility = 'hidden';
+   welcomeDiv.style.visibility = 'hidden';
+    signupDiv.style.visibility = 'hidden';
+    gameDiv.style.visibility = 'hidden';
+	readyDiv.style.visibility = 'hidden';
+	gameOverDiv.style.visibility = 'hidden';
     signinDiv.style.visibility = 'visible';
 }
 
