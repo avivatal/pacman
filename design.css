@@ -71,19 +71,24 @@ div{
 	position: absolute;
 	margin-left: 200px;} 
 
-signup{	
-	padding-top: 400px;
+
+.sign{	
+	padding-top: 100px;
     height: 600px;
     top: 200px;
     bottom: 0;
     right: 0;
+	margin-right: 700px;
 }
+
 .container {
-	position: relative;
+	position: absolute;
     border-radius: 5px;
     background-color: rgba(0,0,153,0.6);
-    padding: 50px;
+    padding: 200px;
 	width: 50%;
+	margin: 50px;
+	float: right;
 }
 
 nav{
