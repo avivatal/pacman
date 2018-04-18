@@ -612,6 +612,7 @@ function signinfunc(){
         window.alert("Invalid username");
     }
     else {
+		document.getElementById("user").innerHTML = "Welcome " + username + "!";
         start();
     }
 }
