@@ -7,6 +7,7 @@ var pac_color;
 var start_time;
 var time_elapsed;
 var interval;
+var numOfGhosts;
 var pinkPostion = [0, 0];
 var bluePosition = [9, 9];
 var greenPosition = [0, 9];
@@ -35,7 +36,37 @@ var gameDiv;
 var mySound;
 var readyDiv;
 var gameOverDiv;
+var optionsDiv;
 var numOfFood = 50;
+var intervals = null;
+
+function initialize(){
+	pinkPostion = [0, 0];
+	bluePosition = [9, 9];
+	greenPosition = [0, 9];
+	ghostPositions = [pinkPostion, bluePosition, greenPosition];
+	pinkfood = false;
+	bluefood = false;
+	greenfood = false;
+	heartfood = false;
+	candyfood = false;
+	ghostfood = [pinkfood, bluefood, greenfood];
+	lastKeyPressed = null;
+	heartPosition = [9, 0];
+	candyPosition = [5,5];
+	isHeartAlive = true;
+	isCandyAlive = true;
+	lives = 3;
+	isGameOver = false;
+	welcome = true;
+	signin = false;
+	if (intervals != null){
+		for(var i=0; i<3; i++){
+			clearInterval(intervals[i]);
+		}
+	}
+	gameOverDiv.style.visibility = 'hidden';
+}	
 
 $(document).ready(function () {
     signupDiv = document.getElementById("signup")
@@ -49,6 +80,8 @@ $(document).ready(function () {
 	readyDiv.style.visibility = 'hidden';
 	gameOverDiv = document.getElementById("gameOver");
 	gameOverDiv.style.visibility = 'hidden';
+	optionsDiv = document.getElementById("options");
+	optionsDiv.style.visibility = 'hidden';
     users = new Array();
     users.push(["a", "a"]);
     window.addEventListener("keydown", function(e) {
@@ -57,16 +90,17 @@ $(document).ready(function () {
         e.preventDefault();
     }
 }, false);
+		
 });
 
 function start() {
+	initialize();
     context = document.getElementById("canvas").getContext("2d");
-    isGameOver = false;
     board = new Array();
     score = 0;
     pac_color = "yellow";
     var cnt = 100;
-    var food_remain = 50;
+    var food_remain = numOfFood;
     var pacman_remain = 1;
     start_time = new Date();
     document.getElementById('lblLives').innerHTML = lives;
@@ -102,17 +136,17 @@ function start() {
 	board[5][5] = 9; //candy
     board[9][0] = 8 //heart
     board[0][0] = 5; //pink
-    board[9][9] = 6; //blue
-    board[0][9] = 7; //green
+	if(numOfGhosts == 2){
+		board[9][9] = 6; //blue
+	}
+	if(numOfGhosts == 3){
+		board[0][9] = 7; //green
+	}
     while (food_remain > 0) {
         var emptyCell = findRandomEmptyCell(board);
         board[emptyCell[0]][emptyCell[1]] = 1;
         food_remain--;
     }
-   
-    //interval=setInterval(UpdatePosition, 250);
-	
-    
 	Draw();
 	readySetGo();
 	mySound = new sound("opening.mp3");
@@ -129,10 +163,11 @@ function start() {
         keysDown[e.keyCode] = false;
 
     }, false);
-	setInterval(UpdateTimer, 250);
-    setInterval(moveGhosts, 450);
-    setInterval(moveHeart, 550);
-	setInterval(moveCandy, 550);
+	intervals = [0,0,0,0];
+	intervals[0] = setInterval(UpdateTimer, 250);
+    intervals[1] = setInterval(moveGhosts, 450);
+    intervals[2] = setInterval(moveHeart, 550);
+	intervals[3] = setInterval(moveCandy, 550);
     }, 5000);
 	
 }
@@ -292,7 +327,7 @@ function Draw() {
 
 function moveGhosts() {
     if (!isGameOver) {
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < numOfGhosts; i++) {
             var x = ghostPositions[i][0];
             var y = ghostPositions[i][1];
             var manhatten = 10000;
@@ -419,10 +454,16 @@ function moveHeart() {
         if (heartfood) {
             board[heartPosition[0]][heartPosition[1]] = 1;
         }
+		else{
+			board[heartPosition[0]][heartPosition[1]] = 0;
+		}
         heartPosition = [newPos[0], newPos[1]];
         if (board[newPos[0]][newPos[1]] == 1) {
             heartfood = true;
         }
+		else { 
+			heartfood = false;
+		}
         board[newPos[0]][newPos[1]] = 8;
     }
 
@@ -449,10 +490,16 @@ function moveCandy() {
         if (candyfood) {
             board[candyPosition[0]][candyPosition[1]] = 1;
         }
+		else{
+			board[candyPosition[0]][candyPosition[1]] = 0;
+		}
         candyPosition = [newPos[0], newPos[1]];
         if (board[newPos[0]][newPos[1]] == 1) {
             candyfood = true;
         }
+		else {
+			candyfood = false;
+		}
         board[newPos[0]][newPos[1]] = 9;
     }
 
@@ -463,6 +510,12 @@ function UpdateTimer() {
         var currentTime = new Date();
         time_elapsed = (currentTime - start_time) / 1000;
         lblTime.value = time_elapsed;
+		if(time_elapsed >= timeLimit){
+			isGameOver = true;
+			overSound = new sound("gameOver.mp3");
+			overSound.play();
+			gameOverDiv.style.visibility = 'visible';
+		}
     }
 }
 
@@ -511,7 +564,7 @@ function didEatCandy() {
 
 function didGhostEatPacman() {
     if (!isGameOver) {
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < numOfGhosts; i++) {
             if (shape.i == ghostPositions[i][0] && shape.j == ghostPositions[i][1]) {
                 lives--;
                 document.getElementById('lblLives').innerHTML = lives;
@@ -526,6 +579,7 @@ function didGhostEatPacman() {
 					overSound = new sound("gameOver.mp3");
 					overSound.play();
 					gameOverDiv.style.visibility = 'visible';
+					
                 }
                 break;
             }
@@ -599,7 +653,7 @@ function signinfunc(){
                 user = users[i];
                 window.alert("You have signed in successfuly");
                 signinDiv.style.visibility = 'hidden';
-               gameDiv.style.visibility = 'visible';
+				optionsDiv.style.visibility = 'visible';
                 
             }
             else {
@@ -613,8 +667,28 @@ function signinfunc(){
     }
     else {
 		document.getElementById("user").innerHTML = "Welcome " + username + "!";
-        start();
+        
     }
+}
+
+function options(){
+	numOfFood = document.getElementById("pacdots").value;
+	numOfGhosts = document.getElementById("numOfGhosts").value;
+	timeLimit = document.getElementById("timelimit").value;
+	if(numOfFood<50 || numOfFood>90){
+		window.alert("Number of Pac-Dots must be between 50 to 90");
+	}
+	else if (numOfGhosts<1 || numOfGhosts>3){
+		window.alert("Number of ghosts must be between 1 to 3");
+	}
+	else if (timeLimit<60){
+		window.alert("Time limit must be at least 60 seconds");
+	} 
+	else {
+		optionsDiv.style.visibility = 'hidden';
+		gameDiv.style.visibility = 'visible';
+		start();
+	}
 }
 
 function displaySignUp() {

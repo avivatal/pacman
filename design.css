@@ -81,6 +81,15 @@ div{
 	margin-right: 700px;
 }
 
+.options{
+    height: 600px;
+    top: 200px;
+    bottom: 0;
+    right: 0;
+	top: 250px;
+	margin-right: 600px;
+}
+
 .container {
 	position: absolute;
     border-radius: 5px;

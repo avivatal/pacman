@@ -78,14 +78,29 @@
             <p class=txt>Lives:</p>
             <label id="lblLives" class="txt" type="text" >test</label>
             <br/>
+			<button id="restart" onclick="start()">Restart</button>
     </div>
         
     <div id="ready" style="margin-left: 500px; margin-top: 100px">
 		<img src = "ready.png">
-		</div>
-		<div id="gameOver" style="margin-left: 550px; margin-top: 100px">
+	</div>
+	
+	<div id="gameOver" style="margin-left: 550px; margin-top: 100px">
 		<img src = "gameover.png">
-		</div>
+	</div>
+	
+	<div id="options" class="options" style="margin-left: 500px;">
+		<form id="optionsform" style="color:yellow; font-family: Arial, Helvetica, sans-serif;">
+                    Enter number of Pac-Dots (50-90):</br>
+                    <input id="pacdots" type="text" ></br></br>
+                    Enter time limit (min: 60s):</br>
+                    <input id="timelimit" type="text" ></br></br>
+					Enter number of ghosts (1-3):</br>
+					<input id="numOfGhosts" type="text" ></br></br>         
+        </form>
+		<button id="submitoptions" onclick="options()">Submit</button>
+	</div>
+	
         
     </body>
 
