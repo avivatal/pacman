@@ -709,14 +709,15 @@ function didGhostEatPacman() {
 
 function restartGame() {
     if (!isGameOver) {
-        for (var i = 0; i <3; i++){
+        for (var i = 0; i <numOfGhosts; i++){
             board[ghostPositions[i][0]][ghostPositions[i][1]] = ghostfood[i];
         }
         ghostPositions = [[0,0], [9,9], [0,9]];
-        for (var i = 0; i <3; i++){
+        for (var i = 0; i <numOfGhosts; i++){
             if(board[ghostPositions[i][0]][ghostPositions[i][1]]==1 || board[ghostPositions[i][0]][ghostPositions[i][1]]==30 || board[ghostPositions[i][0]][ghostPositions[i][1]]==60){
                 ghostfood[i] = board[ghostPositions[i][0]][ghostPositions[i][1]];
             }
+            board[ghostPositions[i][0]][ghostPositions[i][1]] = i+5;
         }
         board[shape.i][shape.j] = 0;
         var newPacmanPos = findRandomEmptyCell(board);
