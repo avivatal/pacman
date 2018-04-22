@@ -1,107 +1,168 @@
 <!DOCTYPE html>
 <html>
-    
-    <head>
-            <link rel="stylesheet" type="text/css" href="design.css">
-            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-            <script type="text/javascript" src="javascript.js"></script>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="design.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="javascript.js"></script>
+
+</head>
+
+<body>
+
+    <header >
+        <div class="logoc">
+Developers: Tal Shem Tov 204757058, Aviva Balata 311673313.</br>
+            <img class=logo src="logo.gif">
             
-    </head>
-    
-    <body>
-            
-        <header>
-			<div class="logoc">
-			<img class=logo src="logo.gif">
-			<label id="user" class="txt" type="text" > </label>
-			</div>
-        </header>
-          <div id="welcome">
-                
-                <button  onclick="displaySignUp()">Sign Up</button>
-                <button onclick="displaySignIn()">Sign in</button>
-				
+            <label id="user" class="txt" type="text"> </label>
         </div>
-		
-		<nav>
-			<ul>
-				<a  class="nav" onclick="displaySignIn()" href="#signin">Sign In</a>
-				<a class="nav" onclick="displaySignUp()" href="#signin">Sign Up</a>
-				<a class="nav" href="#playlist">About</a>
-			</ul>
-		</nav>
-       
-      
-       
+    </header>
+    <div id="welcome">
+
+        <button onclick="displaySignUp()">Sign Up</button>
+        <button onclick="displaySignIn()">Sign in</button>
+
+    </div>
+<div id="nav">
+        <nav>
+                <ul>
+                    <a class="nav" onclick="displaySignIn()" href="#signin">Sign In</a>
+                    <a class="nav" onclick="displaySignUp()" href="#signup">Sign Up</a>
+                    <a class="nav" onclick="about()" href="#about">About</a>
+                </ul>
+            </nav>
+        
+</div>
+   
+
+
     <div id="signup" class="sign">
-		
+
         <form id="signupform" style="color:yellow; font-family: Arial, Helvetica, sans-serif;">
             Username:</br>
-            <input id="username" type="text" ></br></br>
+            <input id="username" type="text">
+            </br>
+            </br>
             Password:</br>
-            <input id="password" type="password" ></br></br>
+            <input id="password" type="password">
+            </br>
+            </br>
             First Name:</br>
-            <input id="firstname" type="text" ></br></br>
+            <input id="firstname" type="text">
+            </br>
+            </br>
             Last Name:</br>
-            <input id="lastname" type="text" ></br></br>
+            <input id="lastname" type="text">
+            </br>
+            </br>
             Email:</br>
-            <input id="email" type="text" ></br></br>
+            <input id="email" type="text">
+            </br>
+            </br>
             Date of Birth:</br>
-            <input id="dob" type="date" ></br></br>
-           
+            <input id="dob" type="date">
+            </br>
+            </br>
+
         </form>
         <button id="submit" onclick="signup()">Submit</button>
-	
+
     </div>
 
     <div id="signin" class="sign">
-            <form id="signinform" style="color:yellow; font-family: Arial, Helvetica, sans-serif;">
-                    Username:</br>
-                    <input id="usernameSignIn" type="text" ></br></br>
-                    Password:</br>
-                    <input id="passwordSignIn" type="password" ></br></br>
-                   
-            </form>
-            <button onclick="signinfunc()">Submit</button>
+        <form id="signinform" style="color:yellow; font-family: Arial, Helvetica, sans-serif;">
+            Username:</br>
+            <input id="usernameSignIn" type="text">
+            </br>
+            </br>
+            Password:</br>
+            <input id="passwordSignIn" type="password">
+            </br>
+            </br>
+
+        </form>
+        <button onclick="signinfunc()">Submit</button>
     </div>
 
     <div id="game">
-            <canvas id="canvas" height="600" width="600"></canvas>
-            
-            
-            <p class=txt>Score:</p>
-            <input id="lblScore" class="box" type="text" />
-            <br/>
-            <p class=txt>Time:</p>
-            <input id="lblTime" class="box" type="text" />
-            <br/>
-            <p class=txt>Lives:</p>
-            <label id="lblLives" class="txt" type="text" >test</label>
-            <br/>
-			<button id="restart" onclick="start()">Restart</button>
+            <table>
+                    <tr>
+                        <td>
+                            <p class=txt>Score:</p>
+                        </td>
+                        <td>
+                            <label id="lblScore" class="txt" type="text">test</label>
+                        </td>
+                        <td>
+                            <p class=txt>Time:</p>
+                        </td>
+                        <td>
+                            <label id="lblTime" class="txt" type="text">test</label>
+                        </td>
+                        <td>
+                            <p class=txt>Lives:</p>
+                        </td>
+                        <td>
+                            <label id="lblLives" class="txt" type="text">test</label>
+                        </td>
+                        <td>
+                            <button id="restart" onclick="start()" style="margin-left: 200px;">Restart</button>
+                        </td>
+                    </tr>
+                </table>
+        <canvas id="canvas" height="600" width="600"></canvas>
+
+        
     </div>
-        
-    <div id="ready" style="margin-left: 500px; margin-top: 100px">
-		<img src = "ready.png">
-	</div>
-	
-	<div id="gameOver" style="margin-left: 550px; margin-top: 100px">
-		<img src = "gameover.png">
-	</div>
-	
-	<div id="options" class="options" style="margin-left: 500px;">
-		<form id="optionsform" style="color:yellow; font-family: Arial, Helvetica, sans-serif;">
-                    Enter number of Pac-Dots (50-90):</br>
-                    <input id="pacdots" type="text" ></br></br>
-                    Enter time limit (min: 60s):</br>
-                    <input id="timelimit" type="text" ></br></br>
-					Enter number of ghosts (1-3):</br>
-					<input id="numOfGhosts" type="text" ></br></br>         
+
+    <div class="msg" id="ready" >
+        <img src="ready.png">
+    </div>
+
+    <div class="msg" id="gameOver">
+        <img src="youLost.png">
+    </div>
+
+    <div class="msg" id="noTime">
+            <img src="youCanDoBetter.png">
+    </div>
+
+    <div class="msg" id="winner">
+            <img src="winner.png">
+    </div>
+
+    <div id="options" class="options" >
+        <form id="optionsform" style="color:yellow; font-family: Arial, Helvetica, sans-serif;">
+            Enter number of Pac-Dots (50-90):</br>
+            <input id="pacdots" type="text">
+            </br>
+            </br>
+            Enter time limit (min: 60s):</br>
+            <input id="timelimit" type="text">
+            </br>
+            </br>
+            Enter number of ghosts (1-3):</br>
+            <input id="numOfGhosts" type="text">
+            </br>
+            </br>
         </form>
-		<button id="submitoptions" onclick="options()">Submit</button>
-	</div>
-	
-        
-    </body>
+        <button id="submitoptions" onclick="options()">Submit</button>
+    </div>
+
+    <div >
+        <dialog id="about">
+            <span id="span" class="close">&times;</span></br>
+            This game has been developed by Tal Shem Tov 204757058, and Aviva Balata 311673313. </br>
+            We have used jquery for initiating parameters only once the document elements have been loaded, by using document.ready(function{}), and to retrieve an element value using $('#elementID').val().</br>
+            The difficulties we came across were mainly in understanding the code that we were given and adding to it, especially in the start function.
+        </dialog>
+    </div>
+<footer>
+    All rights reserved to Aviva Balata and Tal Shem Tov.
+    To contact, please email: pacmanOfficial@gmail.com
+</footer>
+
+</body>
 
 </html>
