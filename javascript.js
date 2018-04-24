@@ -1,6 +1,8 @@
 
 var context;
 var shape = new Object();
+shape.i = 0;
+shape.j = 0;
 var board;
 var score;
 var pac_color;
@@ -20,10 +22,11 @@ var candyfood = 0;
 var clockfood = 0;
 var ghostfood = [pinkfood, bluefood, greenfood];
 var lastKeyPressed = null;
-var heartPosition = [9, 0];
-var candyPosition = [5, 5];
+var heartPosition = [5, 5];
+var candyPosition = [9, 0];
 var clockPosition = [5,9];
 var isHeartAlive = true;
+var isCompleted=false;
 var isCandyAlive = true;
 var isClockAlive = true;
 var lives = 3;
@@ -45,6 +48,7 @@ var intervals = null;
 var winnerDiv;
 var noTimeDiv;
 var totalFood;
+var counter=0;
 
 function initialize() {
     numOfFood = totalFood;
@@ -60,17 +64,18 @@ function initialize() {
     clockfood = 0;
     ghostfood = [pinkfood, bluefood, greenfood];
     lastKeyPressed = null;
-    heartPosition = [9, 0];
-    candyPosition = [5, 5];
+    heartPosition = [5, 5];
+    candyPosition = [9, 0];
     clockPosition = [5, 9];
     isHeartAlive = true;
     isCandyAlive = true;
+	isClockAlive = true;
     lives = 3;
     isGameOver = false;
     welcome = true;
     signin = false;
     if (intervals != null) {
-        for (var i = 0; i < 4; i++) {
+        for (var i = 0; i < 5; i++) {
             clearInterval(intervals[i]);
         }
     }
@@ -102,6 +107,7 @@ $(document).ready(function () {
     users = new Array();
     time_elapsed = 0;
     users.push(["a", "a"]);
+	
     window.addEventListener("keydown", function (e) {
         // space and arrow keys
         if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
@@ -131,8 +137,17 @@ function start() {
     var pacman_remain = 1;
     start_time = new Date();
     document.getElementById('lblLives').innerHTML = lives;
-    eatingSound = new sound("eatingSound.mp3");
-    
+    eatingSound = document.createElement("audio");
+	eatingSound.pause();
+    eatingSound.src = "eatingSound.mp3";
+	eatingSound.setAttribute("loop", "true");
+	eatingSound.loop=true;
+	eatingSound.addEventListener('ended', function() {
+		this.currentTime = 0;
+		this.play();
+		}, false);
+	
+	
     var numOfBlue = Math.round(numOfFood * 0.6);
     var numOfRed = Math.round(numOfFood * 0.3);
     var numberOfWhite = numOfFood - numOfBlue - numOfRed;
@@ -187,7 +202,7 @@ function start() {
         }
     }
     if (board[5][9] == 1 || board[5][9] == 30 || board[5][9] == 60) {
-        candyfood = board[5][9];
+        clockfood = board[5][9];
     }
     board[5][9] = 10; //clock
     if (board[5][5] == 1 || board[5][5] == 30 || board[5][5] == 60) {
@@ -242,7 +257,7 @@ function start() {
         readyDiv.style.visibility = 'hidden';
         mySound.pause();
         eatingSound.play();
-        eatingSound.loop();
+        
         time_elapsed = 0;
         intervals = [0, 0, 0, 0 ,0];
         intervals[0] = setInterval(UpdateTimer, 250);
@@ -465,7 +480,9 @@ function moveGhosts() {
             board[ghostPositions[i][0]][ghostPositions[i][1]] = ghostfood[i];
             ghostPositions[i][0] = newPos[0];
             ghostPositions[i][1] = newPos[1];
-            ghostfood[i] = board[ghostPositions[i][0]][ghostPositions[i][1]];
+			if(board[ghostPositions[i][0]][ghostPositions[i][1]] != 2){
+				ghostfood[i] = board[ghostPositions[i][0]][ghostPositions[i][1]];
+			}
             board[ghostPositions[i][0]][ghostPositions[i][1]] = i + 5;
         }
         didGhostEatPacman();
@@ -502,6 +519,7 @@ function UpdatePosition() {
         if (board[shape.i][shape.j] == 1) {
             score += 25;
             numOfFood--;
+			
            
 
         } else if (board[shape.i][shape.j] == 30) {
@@ -516,13 +534,14 @@ function UpdatePosition() {
         if (score >= 20 && time_elapsed <= 10) {
             pac_color = "green";
         }
-        if (numOfFood == 0) {
+		isGameCompleted();
+        if (isCompleted) {
             isGameOver = true;
-            for (var i = 0; i < 4; i++) {
+            for (var i = 0; i < 5; i++) {
                 window.clearInterval(intervals[i]);
             }
-            window.alert("Game completed");
-            mySound.pause();
+            winner.style.visibility = 'visible';
+            eatingSound.pause();
         }
         else {
             didEatHeart();
@@ -622,6 +641,7 @@ function UpdateTimer() {
         lblTime.innerHTML = time_elapsed.toString().substring(0,time_elapsed.toString().indexOf(".")+2);
         if (time_elapsed >= timeLimit) {
             isGameOver = true;
+			eatingSound.pause();
             overSound = new sound("gameOver.mp3");
             overSound.play();
             if(score < 150)
@@ -645,7 +665,7 @@ function sound(src) {
         this.sound.play();
     }
     this.loop = function () {
-        this.sound.loop = true;
+		this.sound.setAttribute("loop", "true");
     }
     this.pause = function () {
         this.sound.pause();
@@ -693,12 +713,12 @@ function didGhostEatPacman() {
                     restartGame();
                 }
                 else {
-
-                    mySound.pause();
+                    eatingSound.pause();
                     isGameOver = true;
                     overSound = new sound("gameOver.mp3");
                     overSound.play();
                     gameOverDiv.style.visibility = 'visible';
+					
 
                 }
                 break;
@@ -724,6 +744,17 @@ function restartGame() {
         shape.i = newPacmanPos[0];
         shape.j = newPacmanPos[1];
         board[newPacmanPos[0]][newPacmanPos[1]] = 2;
+		if (intervals != null) {
+        for (var i = 0; i < 5; i++) {
+            clearInterval(intervals[i]);
+        }
+		}
+        intervals = [0, 0, 0, 0 ,0];
+        intervals[0] = setInterval(UpdateTimer, 250);
+        intervals[1] = setInterval(moveGhosts, 450);
+        intervals[2] = setInterval(moveHeart, 550);
+        intervals[3] = setInterval(moveCandy, 550);
+        intervals[4] = setInterval(moveClock, 550);
         Draw();
     }
 }
@@ -852,6 +883,19 @@ function about(){
         document.getElementById("about").close();  
     }
 }
+
+function isGameCompleted(){
+	isCompleted = true;
+	for(var i = 0; i<board.length; i++){
+		for(var j=0; j<board.length; j++){
+			if(board[i][j]==1 || board[i][j]==30 || board[i][j]==60){
+				isCompleted= false;
+				break;
+			}
+		}
+	}
+}
+			
 
 
 
